@@ -2,147 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta   name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Temperature Converter</title>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Segoe UI", sans-serif;
-        }
-
         body {
+            margin: 0;
             height: 100vh;
-            background: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80');
-            background-size: cover;
-            background-position: center;
+            background: url('bubble.png') no-repeat center center/cover;
             display: flex;
-            align-items: center;
             justify-content: center;
-            backdrop-filter: blur(3px);
+            align-items: center;
+            font-family: Arial;
         }
 
-        .container {
-            width: 450px;
-            padding: 30px;
-            border-radius: 20px;
-            background: rgba(20, 20, 20, 0.55);
-            backdrop-filter: blur(12px);
-            color: #fff;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+        .home-btn {
+            position: fixed;
+            top: 18px;
+            left: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
         }
 
-        h2 {
+        .box {
+            width: 340px;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            color: white;
             text-align: center;
-            margin-bottom: 20px;
-            font-size: 28px;
-            font-weight: 500;
         }
 
-        label {
-            font-size: 17px;
-            margin-top: 15px;
-            display: block;
-        }
-
-        input, select {
+        input, button, select {
             width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 25px;
-            padding: 12px;
+            padding: 14px;
+            margin-top: 12px;
             border: none;
             border-radius: 10px;
             font-size: 18px;
-            background: #00ffc8;
-            color: #000;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.2s ease;
         }
 
-        button:hover {
-            background: #00cfa0;
-        }
-
-        .result-box {
-            margin-top: 25px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            text-align: center;
-            font-size: 20px;
+        button {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            font-weight: 700;
         }
     </style>
 </head>
-
 <body>
 
-    <div class="container">
-        <h2>Temperature Converter</h2>
+<div class="home-btn" onclick="location.href='index.html'">⟵</div>
 
-        <label>Enter Temperature:</label>
-        <input type="number" id="tempValue" placeholder="Enter value">
+<div class="box">
+    <h2>Temperature Converter</h2>
 
-        <label>Convert From:</label>
-        <select id="fromUnit">
-            <option value="C">Celsius (°C)</option>
-            <option value="F">Fahrenheit (°F)</option>
-            <option value="K">Kelvin (K)</option>
-        </select>
+    <input type="number" id="temp" placeholder="Enter Temperature">
 
-        <label>Convert To:</label>
-        <select id="toUnit">
-            <option value="C">Celsius (°C)</option>
-            <option value="F">Fahrenheit (°F)</option>
-            <option value="K">Kelvin (K)</option>
-        </select>
+    <select id="type">
+        <option value="c2f">Celsius ➜ Fahrenheit</option>
+        <option value="f2c">Fahrenheit ➜ Celsius</option>
+    </select>
 
-        <button onclick="convertTemp()">Convert</button>
+    <button onclick="convert()">Convert</button>
 
-        <div class="result-box" id="result">Converted value will appear here</div>
-    </div>
+    <h3 id="result"></h3>
+</div>
 
-    <script>
-        function convertTemp() {
-            let value = parseFloat(document.getElementById('tempValue').value);
-            let from = document.getElementById('fromUnit').value;
-            let to = document.getElementById('toUnit').value;
+<script>
+function convert() {
+    let t = parseFloat(document.getElementById("temp").value);
+    let type = document.getElementById("type").value;
 
-            if (isNaN(value)) {
-                alert("Please enter a valid temperature!");
-                return;
-            }
+    if (isNaN(t)) {
+        document.getElementById("result").innerText = "Enter a valid temperature!";
+        return;
+    }
 
-            let result;
+    let res = 0;
 
-            // Convert input to Celsius first
-            if (from === "C") result = value;
-            if (from === "F") result = (value - 32) * 5/9;
-            if (from === "K") result = value - 273.15;
+    if (type === "c2f") res = (t * 9/5) + 32;
+    else res = (t - 32) * 5/9;
 
-            // Convert Celsius to target
-            if (to === "F") result = (result * 9/5) + 32;
-            if (to === "K") result = result + 273.15;
-
-            // If converting from Celsius to Celsius, etc.
-            if (to === "C") result = result;
-
-            document.getElementById('result').innerHTML =
-                `Converted Temperature: <strong>${result.toFixed(2)}°${to}</strong>`;
-        }
-    </script>
+    document.getElementById("result").innerText = "Converted: " + res.toFixed(2);
+}
+</script>
 
 </body>
 </html>
-
