@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unit Converter</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: url('bg.jpg') no-repeat center center/cover;
+            backdrop-filter: blur(5px);
+        }
+
+        /* Blur Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(12px);
+            background: rgba(0,0,0,0.4);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: rgba(20,20,20,0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            transition: 0.3s ease;
+            padding: 20px;
+        }
+        .sidebar.open { left: 0; }
+
+        .sidebar a {
+            display: block;
+            color: #fff;
+            margin: 18px 0;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* Menu Button */
+        .menu-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            font-size: 32px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Main Box */
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            padding: 30px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 14px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 25px rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 18px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4a9eff;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .result {
+            margin-top: 15px;
+            font-size: 22px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+<!-- Sidebar Menu -->
+<div class="sidebar" id="sidebar">
+    <a href="index.html">🏠 Home</a>
+    <a href="tip.html">💰 Tip Calculator</a>
+    <a href="bmi.html">⚖️ BMI Calculator</a>
+    <a href="temp.html">🌡 Temperature Converter</a>
+    <a href="unit.html">📏 Unit Converter</a>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <h2>Unit Converter</h2>
+
+    <select id="type" onchange="updateUnits()">
+        <option value="length">Length</option>
+        <option value="weight">Weight</option>
+        <option value="temperature">Temperature</option>
+    </select>
+
+    <select id="fromUnit"></select>
+
+    <select id="toUnit"></select>
+
+    <input type="number" id="value" placeholder="Enter value">
+
+    <button onclick="convert()">Convert</button>
+
+    <div class="result" id="output">Result: --</div>
+</div>
+
+<script>
+    const units = {
+        length: ["Meters", "Kilometers", "Centimeters", "Millimeters", "Inches", "Feet"],
+        weight: ["Kilograms", "Grams", "Pounds"],
+        temperature: ["Celsius", "Fahrenheit", "Kelvin"]
+    };
+
+    function updateUnits() {
+        const type = document.getElementById("type").value;
+        const fromUnit = document.getElementById("fromUnit");
+        const toUnit = document.getElementById("toUnit");
+
+        fromUnit.innerHTML = "";
+        toUnit.innerHTML = "";
+
+        units[type].forEach(u => {
+            fromUnit.innerHTML += `<option>${u}</option>`;
+            toUnit.innerHTML += `<option>${u}</option>`;
+        });
+    }
+
+    updateUnits();
+
+    function convert() {
+        let type = document.getElementById("type").value;
+        let value = parseFloat(document.getElementById("value").value);
+        let from = document.getElementById("fromUnit").value;
+        let to = document.getElementById("toUnit").value;
+
+        if (isNaN(value)) {
+            document.getElementById("output").innerText = "Result: Invalid Input";
+            return;
+        }
+
+        let result;
+
+        // LENGTH
+        if (type === "length") {
+            const factors = {
+                "Meters": 1,
+                "Kilometers": 1000,
+                "Centimeters": 0.01,
+                "Millimeters": 0.001,
+                "Inches": 0.0254,
+                "Feet": 0.3048
+            };
+            result = value * factors[from] / factors[to];
+        }
+
+        // WEIGHT
+        if (type === "weight") {
+            const factors = {
+                "Kilograms": 1,
+                "Grams": 0.001,
+                "Pounds": 0.453592
+            };
+            result = value * factors[from] / factors[to];
+        }
+
+        // TEMPERATURE
+        if (type === "temperature") {
+            if (from === to) result = value;
+            else if (from === "Celsius" && to === "Fahrenheit") result = value * 9/5 + 32;
+            else if (from === "Fahrenheit" && to === "Celsius") result = (value - 32) * 5/9;
+            else if (from === "Celsius" && to === "Kelvin") result = value + 273.15;
+            else if (from === "Kelvin" && to === "Celsius") result = value - 273.15;
+            else if (from === "Fahrenheit" && to === "Kelvin") result = (value - 32) * 5/9 + 273.15;
+            else if (from === "Kelvin" && to === "Fahrenheit") result = (value - 273.15) * 9/5 + 32;
+        }
+
+        document.getElementById("output").innerText = "Result: " + result.toFixed(4);
+    }
+
+    function toggleMenu() {
+        document.getElementById("sidebar").classList.toggle("open");
+    }
+</script>
+
+</body>
+</html>
