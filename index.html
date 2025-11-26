@@ -1,118 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calculator</title>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        background: url('bubble.png') no-repeat center center/cover;
+    }
 
-            /* 🔥 Updated background */
-            background: url('bubble.png') no-repeat center center/cover;
+    /* Overlay for blur */
+    .overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        backdrop-filter: blur(12px);
+        background: rgba(0,0,0,0.4);
+    }
 
-            backdrop-filter: blur(5px);
-        }
+    /* Sidebar menu (optional still accessible) */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -260px;
+        width: 260px;
+        height: 100%;
+        background: rgba(20,20,20,0.85);
+        backdrop-filter: blur(10px);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+        transition: 0.3s ease;
+        padding: 25px;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar a {
+        display: block;
+        color: #fff;
+        margin: 18px 0;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 600;
+    }
 
-        /* Blur Overlay */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(12px);
-            background: rgba(0,0,0,0.4);
-        }
+    /* Menu Button */
+    .menu-btn {
+        position: fixed;
+        top: 18px;
+        left: 18px;
+        font-size: 32px;
+        color: white;
+        cursor: pointer;
+        z-index: 1000;
+    }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -260px;
-            width: 260px;
-            height: 100%;
-            background: rgba(20,20,20,0.85);
-            backdrop-filter: blur(10px);
-            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
-            transition: 0.3s ease;
-            padding: 25px;
-        }
-        .sidebar.open { left: 0; }
+    /* Calculator Box */
+    .calculator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 400px;
+        padding: 25px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(18px);
+        border-radius: 14px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.45);
+        color: white;
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
 
-        .sidebar a {
-            display: block;
-            color: #fff;
-            margin: 18px 0;
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 600;
-        }
+    /* Calculator main part */
+    .calc-main {
+        flex: 2;
+    }
 
-        /* Menu Button */
-        .menu-btn {
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            font-size: 32px;
-            color: white;
-            cursor: pointer;
-            z-index: 1000;
-        }
+    .screen {
+        width: 100%;
+        height: 70px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: right;
+        padding: 15px;
+        font-size: 32px;
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
 
-        /* Calculator Box */
-        .calculator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px;
-            padding: 25px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(18px);
-            border-radius: 14px;
-            box-shadow: 0 0 25px rgba(0,0,0,0.45);
-            color: white;
-        }
+    .btn-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
 
-        .screen {
-            width: 100%;
-            height: 70px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: right;
-            padding: 15px;
-            font-size: 32px;
-            box-sizing: border-box;
-        }
+    button {
+        padding: 18px;
+        font-size: 20px;
+        border-radius: 10px;
+        border: none;
+        background: rgba(255,255,255,0.25);
+        color: white;
+        cursor: pointer;
+        font-weight: 600;
+        backdrop-filter: blur(5px);
+    }
 
-        .btn-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-        }
+    button:active {
+        transform: scale(0.95);
+    }
 
-        button {
-            padding: 18px;
-            font-size: 20px;
-            border-radius: 10px;
-            border: none;
-            background: rgba(255,255,255,0.25);
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            backdrop-filter: blur(5px);
-        }
+    /* History Panel */
+    .history {
+        flex: 1;
+        background: rgba(0,0,0,0.5);
+        border-radius: 12px;
+        padding: 15px;
+        max-height: 370px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column-reverse;
+        font-size: 18px;
+    }
 
-        button:active {
-            transform: scale(0.95);
-        }
-    </style>
+    .history h3 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .history-item {
+        padding: 8px;
+        margin: 4px 0;
+        background: rgba(255,255,255,0.1);
+        border-radius: 8px;
+        word-wrap: break-word;
+    }
+
+</style>
 </head>
 <body>
 
@@ -128,38 +158,44 @@
     <a href="bmi.html">⚖️ BMI Calculator</a>
     <a href="temp.html">🌡 Temperature Converter</a>
     <a href="unit.html">📏 Unit Converter</a>
-    <a href="history.html">🕘 History</a>
 </div>
 
 <!-- Calculator -->
 <div class="calculator">
-    <div id="display" class="screen">0</div>
+    <div class="calc-main">
+        <div id="display" class="screen">0</div>
+        <div class="btn-grid">
+            <button onclick="press('7')">7</button>
+            <button onclick="press('8')">8</button>
+            <button onclick="press('9')">9</button>
+            <button onclick="press('/')">÷</button>
 
-    <div class="btn-grid">
-        <button onclick="press('7')">7</button>
-        <button onclick="press('8')">8</button>
-        <button onclick="press('9')">9</button>
-        <button onclick="press('/')">÷</button>
+            <button onclick="press('4')">4</button>
+            <button onclick="press('5')">5</button>
+            <button onclick="press('6')">6</button>
+            <button onclick="press('*')">×</button>
 
-        <button onclick="press('4')">4</button>
-        <button onclick="press('5')">5</button>
-        <button onclick="press('6')">6</button>
-        <button onclick="press('*')">×</button>
+            <button onclick="press('1')">1</button>
+            <button onclick="press('2')">2</button>
+            <button onclick="press('3')">3</button>
+            <button onclick="press('-')">−</button>
 
-        <button onclick="press('1')">1</button>
-        <button onclick="press('2')">2</button>
-        <button onclick="press('3')">3</button>
-        <button onclick="press('-')">−</button>
+            <button onclick="press('0')">0</button>
+            <button onclick="press('.')">.</button>
+            <button onclick="calculate()">=</button>
+            <button onclick="press('+')">+</button>
+        </div>
+    </div>
 
-        <button onclick="press('0')">0</button>
-        <button onclick="press('.')">.</button>
-        <button onclick="calculate()">=</button>
-        <button onclick="press('+')">+</button>
+    <!-- History Panel -->
+    <div class="history" id="historyPanel">
+        <h3>History</h3>
     </div>
 </div>
 
 <script>
     let display = document.getElementById("display");
+    let historyPanel = document.getElementById("historyPanel");
 
     function press(num) {
         if (display.innerText === "0") {
@@ -171,10 +207,19 @@
 
     function calculate() {
         try {
-            display.innerText = eval(display.innerText);
+            let result = eval(display.innerText);
+            addToHistory(display.innerText + " = " + result);
+            display.innerText = result;
         } catch {
             display.innerText = "Error";
         }
+    }
+
+    function addToHistory(entry) {
+        let div = document.createElement("div");
+        div.className = "history-item";
+        div.innerText = entry;
+        historyPanel.appendChild(div);
     }
 
     function toggleMenu() {
