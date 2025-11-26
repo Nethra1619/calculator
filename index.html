@@ -99,158 +99,38 @@
 
   </style>
 </head>
-<body>
-  <div class="glass" id="homePage">
-    <h1>Select Calculator</h1>
-    <div class="menu">
-      <button onclick="openPage('tip')">Tip Calculator</button>
-      <button onclick="openPage('bmi')">BMI Calculator</button>
-      <button onclick="openPage('temp')">Temperature Converter</button>
-      <button onclick="openPage('unit')">Unit Converter</button>
+<body style="background:url('bg.jpg');background-size:cover;background-position:center;">
+  <div class="app">
+    <div class="topbar">
+      <span class="menu-btn" onclick="toggleMenu()">☰</span>
+      <h2>Standard</h2>
+    </div>
+
+    <div id="menu" class="sidebar">
+      <button onclick="showCalc()">Basic Calculator</button>
+      <button>Tip Calculator</button>
+      <button>BMI Calculator</button>
+      <button>Temperature Converter</button>
+      <button>Unit Converter</button>
+    </div>
+
+    <div class="calculator">
+      <div id="display">0</div>
+      <div class="keys">
+        <button>%</button><button>√</button><button>x²</button><button>1/x</button>
+        <button>CE</button><button>C</button><button>⌫</button><button>÷</button>
+        <button>7</button><button>8</button><button>9</button><button>×</button>
+        <button>4</button><button>5</button><button>6</button><button>-</button>
+        <button>1</button><button>2</button><button>3</button><button>+</button>
+        <button>±</button><button>0</button><button>.</button><button>=</button>
+      </div>
     </div>
   </div>
 
-  <!-- TIP CALCULATOR PAGE -->
-  <div class="glass section" id="tip">
-    <h1>Tip Calculator</h1>
-    <label>Bill Amount</label>
-    <input id="bill" type="number">
-
-    <label>Tip %</label>
-    <input id="tipPercent" type="number">
-
-    <button class="calculate" onclick="calcTip()">Calculate</button>
-    <div id="tipResult" class="result"></div>
-
-    <button class="back" onclick="goHome()">← Back</button>
-  </div>
-
-  <!-- BMI PAGE -->
-  <div class="glass section" id="bmi">
-    <h1>BMI Calculator</h1>
-    <label>Weight (kg)</label>
-    <input id="weight" type="number">
-
-    <label>Height (cm)</label>
-    <input id="height" type="number">
-
-    <button class="calculate" onclick="calcBMI()">Calculate</button>
-    <div id="bmiResult" class="result"></div>
-
-    <button class="back" onclick="goHome()">← Back</button>
-  </div>
-
-  <!-- TEMPERATURE PAGE -->
-  <div class="glass section" id="temp">
-    <h1>Temperature Converter</h1>
-
-    <label>Value</label>
-    <input id="tempValue" type="number">
-
-    <label>Convert From</label>
-    <select id="tempFrom">
-      <option>Celsius</option>
-      <option>Fahrenheit</option>
-      <option>Kelvin</option>
-    </select>
-
-    <label>Convert To</label>
-    <select id="tempTo">
-      <option>Fahrenheit</option>
-      <option>Celsius</option>
-      <option>Kelvin</option>
-    </select>
-
-    <button class="calculate" onclick="convertTemp()">Convert</button>
-    <div id="tempResult" class="result"></div>
-
-    <button class="back" onclick="goHome()">← Back</button>
-  </div>
-
-  <!-- UNIT PAGE -->
-  <div class="glass section" id="unit">
-    <h1>Unit Converter</h1>
-
-    <label>Value</label>
-    <input id="unitValue" type="number">
-
-    <label>From</label>
-    <select id="unitFrom">
-      <option>cm</option>
-      <option>m</option>
-      <option>km</option>
-    </select>
-
-    <label>To</label>
-    <select id="unitTo">
-      <option>m</option>
-      <option>cm</option>
-      <option>km</option>
-    </select>
-
-    <button class="calculate" onclick="convertUnit()">Convert</button>
-    <div id="unitResult" class="result"></div>
-
-    <button class="back" onclick="goHome()">← Back</button>
-  </div>
-
-
-  <script>
-    function openPage(id) {
-      document.getElementById('homePage').style.display = 'none';
-      document.getElementById(id).classList.add('active');
-    }
-
-    function goHome() {
-      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-      document.getElementById('homePage').style.display = 'block';
-    }
-
-    function calcTip() {
-      let bill = parseFloat(document.getElementById('bill').value);
-      let tip = parseFloat(document.getElementById('tipPercent').value);
-      let total = bill * (tip / 100);
-      document.getElementById('tipResult').innerHTML = "Tip Amount: ₹" + total.toFixed(2);
-    }
-
-    function calcBMI() {
-      let w = parseFloat(document.getElementById('weight').value);
-      let h = parseFloat(document.getElementById('height').value) / 100;
-      let bmi = w / (h*h);
-      document.getElementById('bmiResult').innerHTML = "BMI: " + bmi.toFixed(2);
-    }
-
-    function convertTemp() {
-      let val = parseFloat(document.getElementById('tempValue').value);
-      let from = document.getElementById('tempFrom').value;
-      let to = document.getElementById('tempTo').value;
-      let result = val;
-
-      if(from === 'Celsius' && to === 'Fahrenheit') result = (val * 9/5) + 32;
-      if(from === 'Celsius' && to === 'Kelvin') result = val + 273.15;
-      if(from === 'Fahrenheit' && to === 'Celsius') result = (val - 32) * 5/9;
-      if(from === 'Fahrenheit' && to === 'Kelvin') result = (val - 32) * 5/9 + 273.15;
-      if(from === 'Kelvin' && to === 'Celsius') result = val - 273.15;
-      if(from === 'Kelvin' && to === 'Fahrenheit') result = (val - 273.15) * 9/5 + 32;
-
-      document.getElementById('tempResult').innerHTML = "Converted: " + result.toFixed(2);
-    }
-
-    function convertUnit() {
-      let val = parseFloat(document.getElementById('unitValue').value);
-      let from = document.getElementById('unitFrom').value;
-      let to = document.getElementById('unitTo').value;
-
-      let cm = val;
-      if(from === 'm') cm = val * 100;
-      if(from === 'km') cm = val * 100000;
-
-      let result = cm;
-      if(to === 'm') result = cm / 100;
-      if(to === 'km') result = cm / 100000;
-
-      document.getElementById('unitResult').innerHTML = "Converted: " + result;
-    }
-  </script>
+<script>
+function toggleMenu(){
+  document.getElementById('menu').classList.toggle('show');
+}
+</script>
 </body>
 </html>
