@@ -1,3 +1,100 @@
+a<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: url('bubble.png') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 18px;
+            left: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .box {
+            width: 340px;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+
+        input, button, select {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+        }
+
+        button {
+            background: rgba(255,255,255,0.25);
+            color: white;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="home-btn" onclick="location.href='index.html'">⟵</div>
+
+<div class="box">
+    <h2>Unit Converter</h2>
+
+    <input type="number" id="value" placeholder="Enter Value">
+
+    <select id="unit">
+        <option value="m2cm">Meters ➜ Centimeters</option>
+        <option value="cm2m">Centimeters ➜ Meters</option>
+        <option value="km2m">Kilometers ➜ Meters</option>
+        <option value="m2km">Meters ➜ Kilometers</option>
+    </select>
+
+    <button onclick="convert()">Convert</button>
+
+    <h3 id="result"></h3>
+</div>
+
+<script>
+function convert() {
+    let v = parseFloat(document.getElementById("value").value);
+    let u = document.getElementById("unit").value;
+
+    if (isNaN(v)) {
+        document.getElementById("result").innerText = "Enter a valid number!";
+        return;
+    }
+
+    let res = 0;
+
+    if (u === "m2cm") res = v * 100;
+    if (u === "cm2m") res = v / 100;
+    if (u === "km2m") res = v * 1000;
+    if (u === "m2km") res = v / 1000;
+
+    document.getElementById("result").innerText = "Converted: " + res;
+}
+</script>
+
+</body>
+</html>
 <!DOCTYPE html>
 <html lang="en">
 <head>
