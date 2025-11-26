@@ -91,7 +91,7 @@
     }
 </style>
 </head>
-<body>
+<body style="background:url('bg2.jpg');background-size:cover;background-position:center;">
 
 <div class="container">
 
@@ -219,5 +219,24 @@ function convertUnit() {
 }
 </script>
 
+  
+  <!-- History Panel -->
+  <div id="historyPanel" class="history">
+    <h3>History</h3>
+    <p>No history yet</p>
+  </div>
+
+<script>
+function toggleMenu(){
+  document.getElementById('menu').classList.toggle('show');
+}
+function toggleHistory(){
+  document.getElementById('historyPanel').classList.toggle('show');
+}
+function goToTip(){ window.location.href='tip.html'; }
+function goToBMI(){ window.location.href='bmi.html'; }
+function goToTemp(){ window.location.href='temp.html'; }
+function goToUnit(){ window.location.href='unit.html'; }
+</script>
 </body>
 </html>
