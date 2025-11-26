@@ -1,180 +1,185 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Glass Calculator</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+
     <style>
         body {
             margin: 0;
+            padding: 0;
             height: 100vh;
-            background: url('bubble.png') no-repeat center center fixed;
-            background-size: cover;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+
+            /* 🔥 Updated background */
+            background: url('bubble.png') no-repeat center center/cover;
+
+            backdrop-filter: blur(5px);
         }
 
-        /* Glassmorphism Calculator Container */
+        /* Blur Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(12px);
+            background: rgba(0,0,0,0.4);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: rgba(20,20,20,0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+            transition: 0.3s ease;
+            padding: 25px;
+        }
+        .sidebar.open { left: 0; }
+
+        .sidebar a {
+            display: block;
+            color: #fff;
+            margin: 18px 0;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* Menu Button */
+        .menu-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            font-size: 32px;
+            color: white;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        /* Calculator Box */
         .calculator {
-            width: 420px;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(25px);
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0,0,0,0.5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(18px);
+            border-radius: 14px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.45);
             color: white;
         }
 
-        /* Header bar */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .menu-icon {
-            font-size: 22px;
-            cursor: pointer;
-        }
-
-        .mode {
-            font-size: 18px;
-            opacity: 0.8;
-        }
-
-        /* Display Screen */
-        .display {
+        .screen {
             width: 100%;
-            height: 80px;
-            background: rgba(0,0,0,0.3);
+            height: 70px;
+            background: rgba(255,255,255,0.2);
             border-radius: 10px;
-            font-size: 48px;
+            margin-bottom: 20px;
             text-align: right;
             padding: 15px;
+            font-size: 32px;
             box-sizing: border-box;
-            margin-bottom: 20px;
         }
 
-        /* Buttons Grid */
-        .buttons {
+        .btn-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
 
-        .btn {
-            background: rgba(255, 255, 255, 0.06);
+        button {
             padding: 18px;
-            font-size: 22px;
-            text-align: center;
+            font-size: 20px;
             border-radius: 10px;
-            cursor: pointer;
-            user-select: none;
-            transition: 0.2s;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.18);
-        }
-
-        /* Slide Menu */
-        .menu-panel {
-            position: fixed;
-            left: -250px;
-            top: 0;
-            width: 250px;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(20px);
-            padding: 25px;
-            box-shadow: 5px 0 20px rgba(0,0,0,0.4);
-            transition: 0.3s ease;
+            border: none;
+            background: rgba(255,255,255,0.25);
             color: white;
-        }
-
-        .menu-panel.show {
-            left: 0;
-        }
-
-        .menu-title {
-            font-size: 22px;
-            margin-bottom: 25px;
-        }
-
-        .menu-item {
-            font-size: 18px;
-            padding: 12px 0;
             cursor: pointer;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-weight: 600;
+            backdrop-filter: blur(5px);
         }
 
-        .menu-item:hover {
-            opacity: 0.7;
+        button:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDE MENU -->
-    <div id="menuPanel" class="menu-panel">
-        <div class="menu-title">Menu</div>
-        <div class="menu-item" onclick="goTo('tip.html')">Tip Calculator</div>
-        <div class="menu-item" onclick="goTo('bmi.html')">BMI Calculator</div>
-        <div class="menu-item" onclick="goTo('temp.html')">Temperature Converter</div>
-        <div class="menu-item" onclick="goTo('unit.html')">Unit Converter</div>
+<div class="overlay"></div>
+
+<!-- Menu Button -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+<!-- Sidebar Menu -->
+<div class="sidebar" id="sidebar">
+    <a href="index.html">🏠 Home</a>
+    <a href="tip.html">💰 Tip Calculator</a>
+    <a href="bmi.html">⚖️ BMI Calculator</a>
+    <a href="temp.html">🌡 Temperature Converter</a>
+    <a href="unit.html">📏 Unit Converter</a>
+    <a href="history.html">🕘 History</a>
+</div>
+
+<!-- Calculator -->
+<div class="calculator">
+    <div id="display" class="screen">0</div>
+
+    <div class="btn-grid">
+        <button onclick="press('7')">7</button>
+        <button onclick="press('8')">8</button>
+        <button onclick="press('9')">9</button>
+        <button onclick="press('/')">÷</button>
+
+        <button onclick="press('4')">4</button>
+        <button onclick="press('5')">5</button>
+        <button onclick="press('6')">6</button>
+        <button onclick="press('*')">×</button>
+
+        <button onclick="press('1')">1</button>
+        <button onclick="press('2')">2</button>
+        <button onclick="press('3')">3</button>
+        <button onclick="press('-')">−</button>
+
+        <button onclick="press('0')">0</button>
+        <button onclick="press('.')">.</button>
+        <button onclick="calculate()">=</button>
+        <button onclick="press('+')">+</button>
     </div>
-
-    <!-- CALCULATOR MAIN UI -->
-    <div class="calculator">
-        <div class="top-bar">
-            <div class="menu-icon" onclick="toggleMenu()">☰</div>
-            <div class="mode">Standard</div>
-        </div>
-
-        <div id="display" class="display">0</div>
-
-        <div class="buttons">
-            <div class="btn">%</div>
-            <div class="btn">√</div>
-            <div class="btn">x²</div>
-            <div class="btn">1/x</div>
-
-            <div class="btn">CE</div>
-            <div class="btn">C</div>
-            <div class="btn">⌫</div>
-            <div class="btn">÷</div>
-
-            <div class="btn">7</div>
-            <div class="btn">8</div>
-            <div class="btn">9</div>
-            <div class="btn">×</div>
-
-            <div class="btn">4</div>
-            <div class="btn">5</div>
-            <div class="btn">6</div>
-            <div class="btn">−</div>
-
-            <div class="btn">1</div>
-            <div class="btn">2</div>
-            <div class="btn">3</div>
-            <div class="btn">+</div>
-
-            <div class="btn">±</div>
-            <div class="btn">0</div>
-            <div class="btn">.</div>
-            <div class="btn">=</div>
-        </div>
-    </div>
+</div>
 
 <script>
-function toggleMenu(){
-    document.getElementById("menuPanel").classList.toggle("show");
-}
+    let display = document.getElementById("display");
 
-function goTo(page){
-    window.location.href = page;
-}
+    function press(num) {
+        if (display.innerText === "0") {
+            display.innerText = num;
+        } else {
+            display.innerText += num;
+        }
+    }
+
+    function calculate() {
+        try {
+            display.innerText = eval(display.innerText);
+        } catch {
+            display.innerText = "Error";
+        }
+    }
+
+    function toggleMenu() {
+        document.getElementById("sidebar").classList.toggle("open");
+    }
 </script>
 
 </body>
