@@ -1,247 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Multi Calculator Web App</title>
+  <title>Multi Calculator</title>
   <style>
     body {
       margin: 0;
       height: 100vh;
-      background: linear-gradient(135deg, #4b79a1, #283e51);
-      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=80') no-repeat center/cover;
+      font-family: 'Segoe UI', sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       color: #fff;
     }
 
-    .container {
-      width: 100%;
-      height: 100vh;
-      padding: 40px;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 0;
-      overflow-y: auto;
+    .glass {
+      width: 80%;
+      max-width: 900px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 30px;
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+      min-height: 500px;
     }
 
     h1 {
-      text-align: center;
-      font-size: 40px;
-      margin-bottom: 30px;
-      font-weight: 600;
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 500;
     }
 
-    .nav {
+    .menu {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-bottom: 30px;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .nav button {
-      padding: 12px 30px;
+    .menu button {
+      padding: 18px;
       border: none;
-      border-radius: 25px;
-      background: #00d4ff;
-      color: #000;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 20px;
       cursor: pointer;
-      font-size: 18px;
       transition: 0.3s;
-      font-weight: 600;
     }
 
-    .nav button:hover {
-      background: #00a3cc;
+    .menu button:hover {
+      background: rgba(255,255,255,0.35);
     }
 
     .section {
       display: none;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 30px;
-      border-radius: 15px;
-      max-width: 600px;
-      margin: auto;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 
     .active {
       display: block;
     }
 
-    label {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
     input, select {
       width: 100%;
-      padding: 14px;
-      margin: 10px 0 20px;
-      border-radius: 10px;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
       border: none;
       font-size: 16px;
     }
 
-    button {
-      padding: 14px 24px;
+    button.calculate {
+      padding: 14px;
+      background: #00e1ff;
       border: none;
-      border-radius: 10px;
-      background: #ffd700;
-      color: #000;
-      cursor: pointer;
+      border-radius: 8px;
       font-size: 18px;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background: #e6c200;
+      cursor: pointer;
+      margin-top: 10px;
     }
 
     .result {
+      margin-top: 15px;
       padding: 15px;
-      background: rgba(0, 255, 0, 0.2);
-      border-left: 5px solid #00ff00;
+      background: rgba(0,255,0,0.2);
+      border-left: 4px solid #00ff00;
       font-size: 18px;
     }
+
+    .back {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Multi Calculator Web App</h1>
-
-    <div class="nav">
-      <button onclick="showSection('tip')">Tip Calculator</button>
-      <button onclick="showSection('bmi')">BMI Calculator</button>
-      <button onclick="showSection('temp')">Temperature Converter</button>
-      <button onclick="showSection('unit')">Unit Converter</button>
+  <div class="glass" id="homePage">
+    <h1>Select Calculator</h1>
+    <div class="menu">
+      <button onclick="openPage('tip')">Tip Calculator</button>
+      <button onclick="openPage('bmi')">BMI Calculator</button>
+      <button onclick="openPage('temp')">Temperature Converter</button>
+      <button onclick="openPage('unit')">Unit Converter</button>
     </div>
-
-    <!-- Tip Calculator -->
-    <div id="tip" class="section active">
-      <h2>Tip Calculator</h2>
-      <label>Bill Amount (₹)</label>
-      <input type="number" id="bill" />
-      <label>Tip Percentage (%)</label>
-      <input type="number" id="tipPercent" />
-      <button onclick="calculateTip()">Calculate</button>
-      <p id="tipResult" class="result"></p>
-    </div>
-
-    <!-- BMI Calculator -->
-    <div id="bmi" class="section">
-      <h2>BMI Calculator</h2>
-      <label>Weight (kg)</label>
-      <input type="number" id="weight" />
-      <label>Height (cm)</label>
-      <input type="number" id="height" />
-      <button onclick="calculateBMI()">Calculate</button>
-      <p id="bmiResult" class="result"></p>
-    </div>
-
-    <!-- Temperature Converter -->
-    <div id="temp" class="section">
-      <h2>Temperature Converter</h2>
-      <label>Temperature</label>
-      <input type="number" id="tempInput" />
-      <label>Convert From</label>
-      <select id="fromTemp">
-        <option value="C">Celsius</option>
-        <option value="F">Fahrenheit</option>
-        <option value="K">Kelvin</option>
-      </select>
-      <label>Convert To</label>
-      <select id="toTemp">
-        <option value="C">Celsius</option>
-        <option value="F">Fahrenheit</option>
-        <option value="K">Kelvin</option>
-      </select>
-      <button onclick="convertTemp()">Convert</button>
-      <p id="tempResult" class="result"></p>
-    </div>
-
-    <!-- Unit Converter -->
-    <div id="unit" class="section">
-      <h2>Unit Converter</h2>
-      <label>Value</label>
-      <input type="number" id="unitInput" />
-      <label>Convert From</label>
-      <select id="fromUnit">
-        <option value="m">Meter</option>
-        <option value="km">Kilometer</option>
-        <option value="cm">Centimeter</option>
-      </select>
-      <label>Convert To</label>
-      <select id="toUnit">
-        <option value="m">Meter</option>
-        <option value="km">Kilometer</option>
-        <option value="cm">Centimeter</option>
-      </select>
-      <button onclick="convertUnit()">Convert</button>
-      <p id="unitResult" class="result"></p>
-    </div>
-
   </div>
 
+  <!-- TIP CALCULATOR PAGE -->
+  <div class="glass section" id="tip">
+    <h1>Tip Calculator</h1>
+    <label>Bill Amount</label>
+    <input id="bill" type="number">
+
+    <label>Tip %</label>
+    <input id="tipPercent" type="number">
+
+    <button class="calculate" onclick="calcTip()">Calculate</button>
+    <div id="tipResult" class="result"></div>
+
+    <button class="back" onclick="goHome()">← Back</button>
+  </div>
+
+  <!-- BMI PAGE -->
+  <div class="glass section" id="bmi">
+    <h1>BMI Calculator</h1>
+    <label>Weight (kg)</label>
+    <input id="weight" type="number">
+
+    <label>Height (cm)</label>
+    <input id="height" type="number">
+
+    <button class="calculate" onclick="calcBMI()">Calculate</button>
+    <div id="bmiResult" class="result"></div>
+
+    <button class="back" onclick="goHome()">← Back</button>
+  </div>
+
+  <!-- TEMPERATURE PAGE -->
+  <div class="glass section" id="temp">
+    <h1>Temperature Converter</h1>
+
+    <label>Value</label>
+    <input id="tempValue" type="number">
+
+    <label>Convert From</label>
+    <select id="tempFrom">
+      <option>Celsius</option>
+      <option>Fahrenheit</option>
+      <option>Kelvin</option>
+    </select>
+
+    <label>Convert To</label>
+    <select id="tempTo">
+      <option>Fahrenheit</option>
+      <option>Celsius</option>
+      <option>Kelvin</option>
+    </select>
+
+    <button class="calculate" onclick="convertTemp()">Convert</button>
+    <div id="tempResult" class="result"></div>
+
+    <button class="back" onclick="goHome()">← Back</button>
+  </div>
+
+  <!-- UNIT PAGE -->
+  <div class="glass section" id="unit">
+    <h1>Unit Converter</h1>
+
+    <label>Value</label>
+    <input id="unitValue" type="number">
+
+    <label>From</label>
+    <select id="unitFrom">
+      <option>cm</option>
+      <option>m</option>
+      <option>km</option>
+    </select>
+
+    <label>To</label>
+    <select id="unitTo">
+      <option>m</option>
+      <option>cm</option>
+      <option>km</option>
+    </select>
+
+    <button class="calculate" onclick="convertUnit()">Convert</button>
+    <div id="unitResult" class="result"></div>
+
+    <button class="back" onclick="goHome()">← Back</button>
+  </div>
+
+
   <script>
-    function showSection(id) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    function openPage(id) {
+      document.getElementById('homePage').style.display = 'none';
       document.getElementById(id).classList.add('active');
     }
 
-    function calculateTip() {
-      let bill = parseFloat(document.getElementById("bill").value);
-      let tipPercent = parseFloat(document.getElementById("tipPercent").value);
-      let tip = bill * (tipPercent / 100);
-      let total = bill + tip;
-      document.getElementById("tipResult").innerText = `Tip: ₹${tip.toFixed(2)} | Total: ₹${total.toFixed(2)}`;
+    function goHome() {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById('homePage').style.display = 'block';
     }
 
-    function calculateBMI() {
-      let weight = parseFloat(document.getElementById("weight").value);
-      let height = parseFloat(document.getElementById("height").value) / 100;
-      let bmi = weight / (height * height);
-      document.getElementById("bmiResult").innerText = `Your BMI: ${bmi.toFixed(2)}`;
+    function calcTip() {
+      let bill = parseFloat(document.getElementById('bill').value);
+      let tip = parseFloat(document.getElementById('tipPercent').value);
+      let total = bill * (tip / 100);
+      document.getElementById('tipResult').innerHTML = "Tip Amount: ₹" + total.toFixed(2);
+    }
+
+    function calcBMI() {
+      let w = parseFloat(document.getElementById('weight').value);
+      let h = parseFloat(document.getElementById('height').value) / 100;
+      let bmi = w / (h*h);
+      document.getElementById('bmiResult').innerHTML = "BMI: " + bmi.toFixed(2);
     }
 
     function convertTemp() {
-      let val = parseFloat(document.getElementById("tempInput").value);
-      let from = document.getElementById("fromTemp").value;
-      let to = document.getElementById("toTemp").value;
+      let val = parseFloat(document.getElementById('tempValue').value);
+      let from = document.getElementById('tempFrom').value;
+      let to = document.getElementById('tempTo').value;
+      let result = val;
 
-      let C;
-      if (from === 'C') C = val;
-      else if (from === 'F') C = (val - 32) * 5 / 9;
-      else C = val - 273.15;
+      if(from === 'Celsius' && to === 'Fahrenheit') result = (val * 9/5) + 32;
+      if(from === 'Celsius' && to === 'Kelvin') result = val + 273.15;
+      if(from === 'Fahrenheit' && to === 'Celsius') result = (val - 32) * 5/9;
+      if(from === 'Fahrenheit' && to === 'Kelvin') result = (val - 32) * 5/9 + 273.15;
+      if(from === 'Kelvin' && to === 'Celsius') result = val - 273.15;
+      if(from === 'Kelvin' && to === 'Fahrenheit') result = (val - 273.15) * 9/5 + 32;
 
-      let result;
-      if (to === 'C') result = C;
-      else if (to === 'F') result = (C * 9/5) + 32;
-      else result = C + 273.15;
-
-      document.getElementById("tempResult").innerText = `Converted: ${result.toFixed(2)} ${to}`;
+      document.getElementById('tempResult').innerHTML = "Converted: " + result.toFixed(2);
     }
 
     function convertUnit() {
-      let val = parseFloat(document.getElementById("unitInput").value);
-      let from = document.getElementById("fromUnit").value;
-      let to = document.getElementById("toUnit").value;
+      let val = parseFloat(document.getElementById('unitValue').value);
+      let from = document.getElementById('unitFrom').value;
+      let to = document.getElementById('unitTo').value;
 
-      let meter;
-      if (from === 'm') meter = val;
-      else if (from === 'km') meter = val * 1000;
-      else meter = val / 100;
+      let cm = val;
+      if(from === 'm') cm = val * 100;
+      if(from === 'km') cm = val * 100000;
 
-      let result;
-      if (to === 'm') result = meter;
-      else if (to === 'km') result = meter / 1000;
-      else result = meter * 100;
+      let result = cm;
+      if(to === 'm') result = cm / 100;
+      if(to === 'km') result = cm / 100000;
 
-      document.getElementById("unitResult").innerText = `Converted: ${result.toFixed(2)} ${to}`;
+      document.getElementById('unitResult').innerHTML = "Converted: " + result;
     }
   </script>
 </body>
