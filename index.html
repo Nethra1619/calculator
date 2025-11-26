@@ -1,97 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculator</title>
 
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial; }
+
         body {
-            margin: 0;
-            padding: 0;
             height: 100vh;
-            font-family: Arial, sans-serif;
-
-            /* 🔥 Updated background */
             background: url('bubble.png') no-repeat center center/cover;
-
-            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Blur Overlay */
-        .overlay {
+        /* MENU BUTTON */
+        .menu-btn {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(12px);
-            background: rgba(0,0,0,0.4);
+            top: 18px;
+            left: 20px;
+            font-size: 32px;
+            color: white;
+            cursor: pointer;
+            z-index: 999;
         }
 
-        /* Sidebar */
+        /* SIDEBAR MENU (HIDDEN by default) */
         .sidebar {
             position: fixed;
             top: 0;
-            left: -260px;
+            left: -260px; /* hidden */
             width: 260px;
             height: 100%;
             background: rgba(20,20,20,0.85);
             backdrop-filter: blur(10px);
+            padding: 30px;
             box-shadow: 4px 0 20px rgba(0,0,0,0.4);
-            transition: 0.3s ease;
-            padding: 25px;
+            transition: left 0.3s ease;
+            z-index: 998;
         }
-        .sidebar.open { left: 0; }
+
+        .sidebar.open {
+            left: 0; /* slide in */
+        }
 
         .sidebar a {
             display: block;
-            color: #fff;
-            margin: 18px 0;
+            color: white;
             text-decoration: none;
+            margin: 20px 0;
             font-size: 20px;
             font-weight: 600;
         }
 
-        /* Menu Button */
-        .menu-btn {
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            font-size: 32px;
-            color: white;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        /* Calculator Box */
+        /* CALCULATOR BOX */
         .calculator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px;
-            padding: 25px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(18px);
-            border-radius: 14px;
-            box-shadow: 0 0 25px rgba(0,0,0,0.45);
-            color: white;
+            width: 340px;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.35);
         }
 
         .screen {
             width: 100%;
-            height: 70px;
-            background: rgba(255,255,255,0.2);
+            height: 80px;
+            background: rgba(0,0,0,0.25);
+            color: white;
             border-radius: 10px;
-            margin-bottom: 20px;
+            font-size: 34px;
+            padding: 18px;
             text-align: right;
-            padding: 15px;
-            font-size: 32px;
-            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .btn-grid {
+            margin-top: 20px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 12px;
@@ -100,40 +87,35 @@
         button {
             padding: 18px;
             font-size: 20px;
-            border-radius: 10px;
             border: none;
+            border-radius: 10px;
             background: rgba(255,255,255,0.25);
             color: white;
             cursor: pointer;
             font-weight: 600;
-            backdrop-filter: blur(5px);
         }
-
-        button:active {
-            transform: scale(0.95);
-        }
+        button:active { transform: scale(0.95); }
     </style>
 </head>
+
 <body>
 
-<div class="overlay"></div>
-
-<!-- Menu Button -->
+<!-- MENU BUTTON -->
 <div class="menu-btn" onclick="toggleMenu()">☰</div>
 
-<!-- Sidebar Menu -->
+<!-- HIDDEN SIDEBAR -->
 <div class="sidebar" id="sidebar">
     <a href="index.html">🏠 Home</a>
     <a href="tip.html">💰 Tip Calculator</a>
-    <a href="bmi.html">⚖️ BMI Calculator</a>
+    <a href="bmi.html">⚖ BMI Calculator</a>
     <a href="temp.html">🌡 Temperature Converter</a>
     <a href="unit.html">📏 Unit Converter</a>
     <a href="history.html">🕘 History</a>
 </div>
 
-<!-- Calculator -->
+<!-- MAIN CALCULATOR -->
 <div class="calculator">
-    <div id="display" class="screen">0</div>
+    <div class="screen" id="display">0</div>
 
     <div class="btn-grid">
         <button onclick="press('7')">7</button>
@@ -155,17 +137,21 @@
         <button onclick="press('.')">.</button>
         <button onclick="calculate()">=</button>
         <button onclick="press('+')">+</button>
+
+        <button onclick="clearDisplay()" style="grid-column: span 4; background:#e63946;">
+            CLEAR
+        </button>
     </div>
 </div>
 
 <script>
-    let display = document.getElementById("display");
+    const display = document.getElementById("display");
 
-    function press(num) {
+    function press(n) {
         if (display.innerText === "0") {
-            display.innerText = num;
+            display.innerText = n;
         } else {
-            display.innerText += num;
+            display.innerText += n;
         }
     }
 
@@ -175,6 +161,10 @@
         } catch {
             display.innerText = "Error";
         }
+    }
+
+    function clearDisplay() {
+        display.innerText = "0";
     }
 
     function toggleMenu() {
