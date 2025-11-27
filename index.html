@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Wide Calculator</title>
+<title>Calculator</title>
 
 <style>
     body {
@@ -12,183 +12,219 @@
         height: 100vh;
         font-family: Arial, sans-serif;
         background: url('bubble.png') no-repeat center center/cover;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
-    /* Main Calculator Container */
-    .calc-wrapper {
-        width: 420px;
-        padding: 20px;
-        backdrop-filter: blur(6px);
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 0 0 20px rgba(0,0,0,0.2);
-        position: relative;
+    /* Overlay for blur */
+    .overlay {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        backdrop-filter: blur(12px);
+        background: rgba(0,0,0,0.4);
     }
 
-    /* Menu Icon */
-    .menu-icon {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        font-size: 24px;
-        cursor: pointer;
-        color: white;
-    }
-
-    /* Hidden Menu */
-    .side-menu {
-        position: absolute;
+    /* Sidebar menu */
+    .sidebar {
+        position: fixed;
         top: 0;
-        right: -200px;
-        width: 180px;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 20px;
-        border-radius: 15px 0 0 15px;
-        transition: 0.4s;
+        left: -260px;
+        width: 260px;
+        height: 200%;
+        background: rgba(20,20,20,0.85);
+        backdrop-filter: blur(10px);
+        box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+        transition: 0.3s ease;
+        padding: 25px;
     }
-
-    .side-menu a {
+    .sidebar.open { left: 0; }
+    .sidebar a {
         display: block;
-        color: white;
-        padding: 12px 0;
+        color: #fff;
+        margin: 18px 0;
         text-decoration: none;
-        font-size: 18px;
+        font-size: 20px;
+        font-weight: 600;
     }
 
-    .side-menu a:hover {
-        text-decoration: underline;
+    /* Menu Button */
+    .menu-btn {
+        position: fixed;
+        top: 18px;
+        left: 18px;
+        font-size: 32px;
+        color: white;
+        cursor: pointer;
+        z-index: 1000;
     }
 
-    /* Display Screen (Wide Style) */
-    #display {
+    /* Calculator Box */
+    .calculator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 700px; /* wider calculator */
+        padding: 25px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(18px);
+        border-radius: 14px;
+        box-shadow: 0 0 25px rgba(0,0,0,0.45);
+        color: white;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    /* Calculator main part */
+    .calc-main {
+        flex: 2;
+    }
+
+    .screen {
         width: 100%;
-        height: 70px;
-        font-size: 38px;
-        border: none;
+        height: 100px; /* taller screen */
+        background: rgba(255,255,255,0.2);
+        border-radius: 10px;
         margin-bottom: 20px;
-        padding: 10px;
-        border-radius: 12px;
         text-align: right;
-        background: rgba(255, 255, 255, 0.35);
-        color: black;
-        outline: none;
+        padding: 20px;
+        font-size: 42px; /* bigger font */
+        box-sizing: border-box;
+        overflow-x: auto;
     }
 
-    /* Buttons Grid */
-    .buttons {
+    .btn-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
+        gap: 15px;
     }
 
     button {
-        padding: 20px;
-        border: none;
-        font-size: 20px;
+        padding: 25px; /* bigger buttons */
+        font-size: 24px;
         border-radius: 12px;
+        border: none;
+        background: rgba(255,255,255,0.25);
+        color: white;
         cursor: pointer;
-        background: rgba(255, 255, 255, 0.6);
-        transition: 0.2s;
+        font-weight: 600;
+        backdrop-filter: blur(5px);
     }
 
-    button:hover {
-        background: rgba(255, 255, 255, 0.9);
+    button:active {
+        transform: scale(0.95);
     }
 
     /* History Panel */
-    .history-box {
-        margin-top: 20px;
-        height: 100px;
+    .history {
+        flex: 1;
+        background: rgba(0,0,0,0.5);
+        border-radius: 12px;
+        padding: 15px;
+        max-height: 470px;
         overflow-y: auto;
-        background: rgba(255,255,255,0.4);
-        padding: 10px;
-        border-radius: 10px;
+        display: flex;
+        flex-direction: column-reverse;
         font-size: 18px;
     }
+
+    .history h3 {
+        margin: 0 0 10px 0;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .history-item {
+        padding: 10px;
+        margin: 6px 0;
+        background: rgba(255,255,255,0.1);
+        border-radius: 8px;
+        word-wrap: break-word;
+    }
+
 </style>
 </head>
-
 <body>
 
-<div class="calc-wrapper">
+<div class="overlay"></div>
 
-    <div class="menu-icon" onclick="toggleMenu()">⋮</div>
+<!-- Menu Button -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
 
-    <div class="side-menu" id="menu">
-        <a href="index.html">Home</a>
-        <a href="bmi.html">BMI</a>
-        <a href="tip.html">Tip Calc</a>
-        <a href="unit.html">Unit Converter</a>
-        <a href="temp.html">Temperature</a>
+<!-- Sidebar Menu -->
+<div class="sidebar" id="sidebar">
+    <a href="index.html">Home</a>
+    <a href="tip.html">Tip Calculator</a>
+    <a href="bmi.html">BMI Calculator</a>
+    <a href="temp.html">Temperature Converter</a>
+    <a href="unit.html">Unit Converter</a>
+</div>
+
+<!-- Calculator -->
+<div class="calculator">
+    <div class="calc-main">
+        <div id="display" class="screen">0</div>
+        <div class="btn-grid">
+            <button onclick="press('7')">7</button>
+            <button onclick="press('8')">8</button>
+            <button onclick="press('9')">9</button>
+            <button onclick="press('/')">÷</button>
+
+            <button onclick="press('4')">4</button>
+            <button onclick="press('5')">5</button>
+            <button onclick="press('6')">6</button>
+            <button onclick="press('*')">×</button>
+
+            <button onclick="press('1')">1</button>
+            <button onclick="press('2')">2</button>
+            <button onclick="press('3')">3</button>
+            <button onclick="press('-')">−</button>
+
+            <button onclick="press('0')">0</button>
+            <button onclick="press('.')">.</button>
+            <button onclick="calculate()">=</button>
+            <button onclick="press('+')">+</button>
+        </div>
     </div>
 
-    <input type="text" id="display" disabled>
-
-    <div class="buttons">
-        <button onclick="append('7')">7</button>
-        <button onclick="append('8')">8</button>
-        <button onclick="append('9')">9</button>
-        <button onclick="append('/')">/</button>
-
-        <button onclick="append('4')">4</button>
-        <button onclick="append('5')">5</button>
-        <button onclick="append('6')">6</button>
-        <button onclick="append('*')">*</button>
-
-        <button onclick="append('1')">1</button>
-        <button onclick="append('2')">2</button>
-        <button onclick="append('3')">3</button>
-        <button onclick="append('-')">-</button>
-
-        <button onclick="append('0')">0</button>
-        <button onclick="append('.')">.</button>
-        <button onclick="calculate()">=</button>
-        <button onclick="append('+')">+</button>
-
-        <button onclick="clearDisplay()" style="grid-column: span 4; background:#ff7777;">Clear</button>
+    <!-- History Panel -->
+    <div class="history" id="historyPanel">
+        <h3>History</h3>
     </div>
-
-    <div class="history-box" id="history"></div>
-
 </div>
 
 <script>
-function append(num) {
-    document.getElementById("display").value += num;
-}
+    let display = document.getElementById("display");
+    let historyPanel = document.getElementById("historyPanel");
 
-function clearDisplay() {
-    document.getElementById("display").value = "";
-}
-
-function calculate() {
-    let expr = document.getElementById("display").value;
-    try {
-        let result = eval(expr);
-        document.getElementById("display").value = result;
-
-        // Save history
-        let h = document.getElementById("history");
-        h.innerHTML += expr + " = " + result + "<br>";
-
-    } catch (e) {
-        document.getElementById("display").value = "Error";
+    function press(num) {
+        if (display.innerText === "0") {
+            display.innerText = num;
+        } else {
+            display.innerText += num;
+        }
     }
-}
 
-function toggleMenu() {
-    let menu = document.getElementById("menu");
-    if (menu.style.right === "0px") {
-        menu.style.right = "-200px";
-    } else {
-        menu.style.right = "0px";
+    function calculate() {
+        try {
+            let result = eval(display.innerText);
+            addToHistory(display.innerText + " = " + result);
+            display.innerText = result;
+        } catch {
+            display.innerText = "Error";
+        }
     }
-}
+
+    function addToHistory(entry) {
+        let div = document.createElement("div");
+        div.className = "history-item";
+        div.innerText = entry;
+        historyPanel.appendChild(div);
+    }
+
+    function toggleMenu() {
+        document.getElementById("sidebar").classList.toggle("open");
+    }
 </script>
 
 </body>
