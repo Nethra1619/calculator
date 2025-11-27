@@ -25,17 +25,18 @@
 
     /* Sidebar menu */
     .sidebar {
-        position: fixed;
-        top: 0;
-        left: -260px;
-        width: 260px;
-        height: 200%;
-        background: rgba(20,20,20,0.85);
-        backdrop-filter: blur(10px);
-        box-shadow: 4px 0 20px rgba(0,0,0,0.4);
-        transition: 0.3s ease;
-        padding: 25px;
-    }
+    position: fixed;
+    top: 0;
+    left: -260px;
+    width: 260px;
+    height: 100vh; /* FIXED */
+    background: rgba(20,20,20,0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 4px 0 20px rgba(0,0,0,0.4);
+    transition: 0.3s ease;
+    padding: 25px;
+    overflow-y: auto; /* In case content grows */
+}
     .sidebar.open { left: 0; }
     .sidebar a {
         display: block;
