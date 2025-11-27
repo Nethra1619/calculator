@@ -1,132 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unit Converter</title>
 
     <style>
         body {
             margin: 0;
-            padding: 0;
             height: 100vh;
-            font-family: Arial, sans-serif;
             background: url('bubble.png') no-repeat center center/cover;
-        }
-
-        /* Blur Overlay */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            backdrop-filter: blur(12px);
-            background: rgba(0,0,0,0.4);
-            z-index: -1;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -260px; /* hidden initially */
-            width: 260px;
-            height: 100%;
-            background: rgba(20,20,20,0.85);
-            backdrop-filter: blur(10px);
-            box-shadow: 4px 0 20px rgba(0,0,0,0.4);
-            transition: 0.3s ease;
-            padding: 25px;
-            z-index: 1000;
-        }
-        .sidebar.open { left: 0; }
-
-        .sidebar a {
-            display: block;
-            color: #fff;
-            margin: 18px 0;
-            text-decoration: none;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        /* Menu Button */
-        .menu-btn {
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            font-size: 32px;
-            color: #fff;
-            cursor: pointer;
-            z-index: 1100;
-        }
-
-        /* Main Container */
-        .container {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 350px;
-            padding: 30px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 14px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 0 25px rgba(0,0,0,0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial;
             color: white;
         }
 
-        .container h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 28px;
+        .home-btn {
+            position: fixed;
+            top: 18px;
+            left: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
         }
 
-        select, input {
+        .box {
+            width: 340px;
+            padding: 20px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        select, input, button {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 10px;
+            padding: 14px;
+            margin-top: 12px;
             border: none;
+            border-radius: 10px;
             font-size: 18px;
         }
 
         button {
-            width: 100%;
-            padding: 12px;
-            background: #4a9eff;
-            border: none;
-            border-radius: 10px;
+            background: rgba(255,255,255,0.25);
             color: white;
-            font-size: 20px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
         }
 
         .result {
-            margin-top: 15px;
-            font-size: 22px;
-            text-align: center;
+            margin-top: 12px;
+            font-size: 20px;
             font-weight: bold;
+            color: #fff;
         }
     </style>
 </head>
 <body>
 
-<div class="overlay"></div>
+<div class="home-btn" onclick="location.href='index.html'">⟵</div>
 
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
-
-<!-- Sidebar Menu -->
-<div class="sidebar" id="sidebar">
-    <a href="index.html">🏠 Home</a>
-    <a href="tip.html">💰 Tip Calculator</a>
-    <a href="bmi.html">⚖️ BMI Calculator</a>
-    <a href="temp.html">🌡 Temperature Converter</a>
-    <a href="unit.html">📏 Unit Converter</a>
-</div>
-
-<!-- Main Content -->
-<div class="container">
+<div class="box">
     <h2>Unit Converter</h2>
 
     <select id="type" onchange="updateUnits()">
@@ -191,6 +128,7 @@
                 "Feet": 0.3048
             };
             result = value * factors[from] / factors[to];
+
         } else if (type === "weight") {
             const factors = {
                 "Kilograms": 1,
@@ -198,6 +136,7 @@
                 "Pounds": 0.453592
             };
             result = value * factors[from] / factors[to];
+
         } else if (type === "temperature") {
             if (from === to) result = value;
             else if (from === "Celsius" && to === "Fahrenheit") result = value * 9/5 + 32;
@@ -209,10 +148,6 @@
         }
 
         document.getElementById("output").innerText = "Result: " + result.toFixed(4);
-    }
-
-    function toggleMenu() {
-        document.getElementById("sidebar").classList.toggle("open");
     }
 </script>
 
